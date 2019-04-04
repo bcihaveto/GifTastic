@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Animal Gifs Galore</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+</head>
+<body>
+
+<!-- here's our HTML -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <a class="nav-link" id="header" href="index.html">Animals Gifs Galore!</a>
+        </div>
+    </div>
+    <br>
+     <div class="row">
+        <div class="col-lg-8">
+            <div id="animalButton"></div>
+
+        <div class="col-md-3">
+            <form id="animal-form">
+                <label for="animal-input">Add a cute animal:</label>
+                <input type="text" id="animal-input">
+                <input id="add-animal" type="submit" value="submit">
+            </form>
+        </div>
+     </div>
+</div>
+    <br><br>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="animals"></div>
+        </div>
+    </div>
+</div>
+
+
+<!-- here's our javascript/jquery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+// animal array we want initially displayed on HTML
+var animals = ["Cat", "Puppy", "Monkey", "Lion", "Elephant"];
+// function to GET attributes and display content to DOM using Giphy API and JSON
+function displayAnimals() {
+    var animal = $(this).attr("animal-name");
+    var apikey = "x1b4lFtMhD3ReivYvlHmFgwme69QgOI3";
+    var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key="+ apikey +"&limit=10";
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    })
+    .done(function(response) {
+        //empty() animal div so it doesn't append to bottom of HTML
+        $("#animals").empty();
+        var results = response.data;
+        //for loop through results
+         for (var i = 0; i < results.length; i++) {
+            var animalDiv = $("<div class='userAnimal'>");
+            
+            //make variable for rating and its "paragraph"
+            var rating = results[i].rating;
+            var p = $("<p>").text("Rating: " + rating);
+            //make variables for still url and animated url 
+            var imgPause = results[i].images.fixed_height_still.url;
+            var imgPlay = results[i].images.fixed_height.url;
+            //data attributes to store the still and animated gifs for play/pausing function
+            var gif = $("<img>").addClass("gif").attr("src", imgPause).attr("data-still", imgPause).attr("data-animate", imgPlay).attr("data-state", "still");
+            //append the gif and rating to the new div created during for loop
+            animalDiv.append(gif);
+            animalDiv.append(p);
+            //append all for loop created divs to the animal div in HTML
+            $("#animals").append(animalDiv);
+        }
+        //when the gif is clicked.... play/pause
+        $(".gif").on("click", function() {
+            var state = $(this).attr("data-state");
+            if (state === "still") {
+                $(this).attr("src", $(this).attr("data-animate"));
+                $(this).attr("data-state", "animate");
+            } else {
+                $(this).attr("src", $(this).attr("data-still"));
+                $(this).attr("data-state", "still");
+            }
+        });
+    });
+}
+// function that will create the buttons 
+function createButtons() {
+    $("#animalButton").empty();
+    //loop through animal array
+    for (var i = 0; i < animals.length; i++) {
+        // create button
+        var animalButton = $("<button>");
+    //add class and attribute to button that corresponses with displayAnimals(); 
+        animalButton.addClass("animal");
+        animalButton.attr("animal-name", animals[i]);
+        animalButton.text(animals[i]);
+        $("#animalButton").append(animalButton);
+    }
+}
+//on click event so user can input their own animal 
+$("#add-animal").on("click", function(event) {
+    // preventDefault prevents the whole form from being submited
+    event.preventDefault();
+    var animal = $("#animal-input").val().trim();
+    // if statement that stops user from submiting a blank response/button 
+    if ($("#animal-input").val().trim() === '') {
+        alert("Please write an animal");
+    }
+    else {
+        //push input to original animals array 
+        animals.push(animal);
+        $("#animal-input").val(" ");
+        createButtons();
+    }
+});
+//on click function to run all functions with animal class
+$(document).on("click", ".animal", displayAnimals);
+//run createButtons(); to display all buttons on startup
+createButtons();
+});
+</script>  
+    
+</body>
