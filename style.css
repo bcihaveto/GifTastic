@@ -1,0 +1,50 @@
+/* entire page */
+body {
+    font-display: 600;
+    font-family: Arial, Helvetica, sans-serif;
+    background: lightblue;
+    text-align: center;
+  }
+
+/* title header */
+#header {
+    text-align: center;
+    font-weight: 600;
+    font-size: 32pt;
+    text-decoration: none;
+}
+
+/* entire form */
+  form {
+    float: right;
+    width: 30%;
+}
+
+/* top of input form */
+  label {
+    font-size: 18px;
+    display: flex;
+    margin-bottom: 5px;
+    font-weight: 600;
+  } 
+ 
+/* text input */
+  input[type="text"] {
+    height: 25px;
+    margin-bottom: 12px;
+    font-size: 16px;
+  }
+  
+  /* buttons */
+  button, 
+  input[type="submit"] {
+    /* size of actual buttons */
+    padding: 5px 15px;
+    /* spacing between buttons */
+    margin: 0 12px 12px 0; 
+    font-size: 18px;
+    color: white;
+    background: blue; 
+  }
+  
+ 
